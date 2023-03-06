@@ -1,0 +1,205 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+get_wiki_covid19_page <- function() {
+    
+  # Our target COVID-19 wiki page URL is: https://en.wikipedia.org/w/index.php?title=Template:COVID-19_testing_by_country  
+  # Which has two parts: 
+    # 1) base URL `https://en.wikipedia.org/w/index.php  
+    # 2) URL parameter: `title=Template:COVID-19_testing_by_country`, seperated by question mark ?
+    
+  # Wiki page base
+  wiki_base_url <- "https://en.wikipedia.org/w/index.php"
+  # You will need to create a List which has an element called `title` to specify which page you want to get from Wiki
+  # in our case, it will be `Template:COVID-19_testing_by_country`
+  url_parameter <- "title=Template:COVID-19_testing_by_country"
+  covid19_url <- paste(wiki_base_url, url_parameter, sep = "?")
+  # - Use the `GET` function in httr library with a `url` argument and a `query` arugment to get a HTTP response
+  response <- GET(covid19_url)
+  # Use the `return` function to return the response
+return(response) 
+}
+```
+```{r}
+covid_page <- get_wiki_covid19_page()
+covid_page
+```
+```{r}
+# Get the root html node from the http response in task 1 
+root_node <- read_html(get_wiki_covid19_page())
+root_node
+```
+```{r}
+# Get the table node from the root html node
+table_node <- html_nodes(root_node, "table")
+table_node
+```
+```{r}
+# Read the table node and convert it into a data frame, and print the data frame for review
+covid_df <- as.data.frame(html_table(table_node[2]))
+head(covid_df)
+```
+```{r}
+# Print the summary of the data frame
+summary(covid_df)
+```
+```{r}
+preprocess_covid_data_frame <- function(data_frame) {
+    
+    shape <- dim(data_frame)
+
+    # Remove the World row
+    data_frame<-data_frame[!(data_frame$`Country.or.region`=="World"),]
+    # Remove the last row
+    data_frame <- data_frame[1:172, ]
+    
+    # We dont need the Units and Ref columns, so can be removed
+    data_frame["Ref."] <- NULL
+    data_frame["Units.b."] <- NULL
+    
+    # Renaming the columns
+    names(data_frame) <- c("country", "date", "tested", "confirmed", "confirmed.tested.ratio", "tested.population.ratio", "confirmed.population.ratio")
+    
+    # Convert column data types
+    data_frame$country <- as.factor(data_frame$country)
+    data_frame$date <- as.factor(data_frame$date)
+    data_frame$tested <- as.numeric(gsub(",","",data_frame$tested))
+    data_frame$confirmed <- as.numeric(gsub(",","",data_frame$confirmed))
+    data_frame$'confirmed.tested.ratio' <- as.numeric(gsub(",","",data_frame$`confirmed.tested.ratio`))
+    data_frame$'tested.population.ratio' <- as.numeric(gsub(",","",data_frame$`tested.population.ratio`))
+    data_frame$'confirmed.population.ratio' <- as.numeric(gsub(",","",data_frame$`confirmed.population.ratio`))
+    
+    return(data_frame)
+}
+```
+
+```{r}
+# call `preprocess_covid_data_frame` function and assign it to a new data frame
+New_covid_df <- preprocess_covid_data_frame(covid_df)
+head(New_covid_df)
+```
+
+```{r}
+# Print the summary of the processed data frame again
+summary(New_covid_df)
+```
+
+```{r}
+# Export the data frame to a csv file
+write.csv(x = New_covid_df, file = "C:/Users/a/Downloads/r_project/covid.csv")
+```
+```{r}
+# Get working directory
+wd <- getwd()
+# Get exported 
+file_path <- paste(wd, sep="", "/covid.csv")
+# File path
+print(file_path)
+file.exists(file_path)
+```
+
+```{r}
+# Read covid_data_frame_csv from the csv file
+data_read <- read.csv("C:/Users/a/OneDrive/Documents/covid.csv")
+data_read
+
+# Get the 5th to 10th rows, with two "country" "confirmed" columns
+viewed <- New_covid_df[5:10,c("country", "confirmed")]
+viewed
+```
+
+```{r}
+# Get the total confirmed cases worldwide
+total_confirmed_cases <-sum(New_covid_df[, ("confirmed")])
+paste("Total number of confirmed cases worldwide: ", total_confirmed_cases)
+
+# Get the total tested cases worldwide
+total_tested_cases <-sum(New_covid_df[, ("tested")])
+paste("Total number of tested cases worldwide: ", total_tested_cases)
+
+# Get the positive ratio (confirmed / tested)
+percent <- (total_confirmed_cases / total_tested_cases) * 100
+percent <- round(percent, digits = 1)
+paste("Percentage of Confirmed Cases: ", percent,"%") 
+
+```
+```{r}
+# Get the `country` column
+column <- New_covid_df[, "country"]
+column
+
+```
+```{r}
+# Check its class (should be Factor)
+print(class(New_covid_df[, "country"]))
+```
+```{r}
+# Conver the country column into character so that you can easily sort them
+New_covid_df$country <- as.character(New_covid_df$country)
+print(class(New_covid_df[, "country"]))
+
+```
+```{r}
+# Sort the countries AtoZ
+sortedAsc <- New_covid_df[order(New_covid_df$country, decreasing = FALSE), ]
+sortedAsc
+
+```
+```{r}
+# Sort the countries ZtoA
+sortedDsc <- New_covid_df[order(New_covid_df$country, decreasing = TRUE), ]
+sortedDsc
+# Print the sorted ZtoA list
+```
+```{r}
+# Use a regular expression `United.+` to find matches
+list_of_united <- grep("United.+", New_covid_df$country, value = TRUE)
+# Print the matched country names
+print(list_of_united)
+```
+```{r}
+# Select a subset (should be only one row) of data frame based on a selected country name and columns
+country1 <- New_covid_df[New_covid_df$country == "Nigeria", c("country", "confirmed", "confirmed.population.ratio")]
+country1
+
+```
+```{r}
+# Select a subset (should be only one row) of data frame based on a selected country name and columns
+country2 <- New_covid_df[New_covid_df$country == "Brazil", c("country", "confirmed", "confirmed.population.ratio")]
+country2
+
+```
+```{r}
+# Use if-else statement
+if (country1$confirmed.population.ratio > country2$confirmed.population.ratio) {
+   paste(country1$country, "has a large ratio of confirmed cases to population")
+} else {
+   paste(country2$country, "has a large ratio of confirmed cases to population")
+}
+```
+```{r}
+# Get a subset of any countries with `confirmed.population.ratio` less than the threshold
+country_name <- list()
+for(i in rownames(New_covid_df)){
+  
+  if (New_covid_df[i, "confirmed.population.ratio"] < 1) {
+    #print(New_covid_df[i, "country"]) 
+    country_name <- list.append(country_name, New_covid_df[i, "country"])
+  }
+}
+paste(country_name)
+```
+
+
+
+
+
+
+
