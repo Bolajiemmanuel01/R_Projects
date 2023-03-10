@@ -62,7 +62,20 @@ dbListTables(conn)
 ```
 
 ```{r}
+tables1 = dbListTables(conn)
+for (table in tables1){  
+        cat ("\nColumn info for table", table, ":\n")
+        col.detail <- dbColumnInfo(dbSendQuery(conn,paste( "select * from",table)))
+        print(col.detail)
+}
+```
 
+```{r}
+dbGetQuery(conn, 'SELECT * FROM BOARD limit 5')
+```
+
+```{r}
+dbGetQuery(conn, "SELECT * FROM SCHOOL limit 5")
 ```
 
 

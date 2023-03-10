@@ -1863,6 +1863,70 @@ head(schooldf)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGVzMSA9IGRiTGlzdFRhYmxlcyhjb25uKVxuZm9yICh0YWJsZSBpbiB0YWJsZXMxKXsgIFxuICAgICAgICBjYXQgKFwiXFxuQ29sdW1uIGluZm8gZm9yIHRhYmxlXCIsIHRhYmxlLCBcIjpcXG5cIilcbiAgICAgICAgY29sLmRldGFpbCA8LSBkYkNvbHVtbkluZm8oZGJTZW5kUXVlcnkoY29ubixwYXN0ZSggXCJzZWxlY3QgKiBmcm9tXCIsdGFibGUpKSlcbiAgICAgICAgcHJpbnQoY29sLmRldGFpbClcbn1cbmBgYCJ9 -->
+<pre class="r"><code>tables1 = dbListTables(conn)
+for (table in tables1){  
+        cat (&quot;\nColumn info for table&quot;, table, &quot;:\n&quot;)
+        col.detail &lt;- dbColumnInfo(dbSendQuery(conn,paste( &quot;select * from&quot;,table)))
+        print(col.detail)
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5Db2x1bW4gaW5mbyBmb3IgdGFibGUgQk9BUkQgOlxuIn0= -->
+<pre><code>
+Column info for table BOARD :</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NCwibmNvbCI6Miwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCcDFSd1VvRE1SQ2RUUlB0TGxRRnYyTVh4SXZYTGExRjBGS2toWG9xTVkzdDBqVlpzaW5xelMrdlRiWVowQndOaEx5OG1UY3pMM2tlTFcrelpRWUFQYUFrZ1I1ekVOaGlmcC9mZ1dQY0pRRUtxVDgvWGRLMUE1NjhjcHVHQUIydUhrWUJudzFYMC9KcGpKSDV5d3h4LzdHY1RoYmxaQnlwVTdIbGhnc3J6WCtJdnlNeXhkOWxHeG9RSE1LVGlPMVhJeU5SYXZSSGdjS0JGMzVEdDJoY1hkUzh4ZXBJWm10dWVmRm1mQStBUXlRNTE0MnR0SElpNGwrT1JlTEVSTVRsWHZsSjFyblk3dFV1di9FTnV2QnBEUUttdnpBNXRTUS9vUlREbjVCcVV5azB6bXIrS3V0d3VYQ09POE5GWXlwbDBZbGoyOEpxeXpFdkU3cEdwdk1HaHlQTjlrSXZNQUlBQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"B_ID","2":"character"},{"1":"B_NAME","2":"character"},{"1":"TYPE","2":"character"},{"1":"LANGUAGE","2":"character"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[4]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5Db2x1bW4gaW5mbyBmb3IgdGFibGUgU0NIT09MIDpcbiJ9 -->
+<pre><code>
+Column info for table SCHOOL :</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogQ2xvc2luZyBvcGVuIHJlc3VsdCBzZXQsIHBlbmRpbmcgcm93c1xuIn0= -->
+<pre><code>Warning: Closing open result set, pending rows</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NSwibmNvbCI6Miwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCblZRWFV2RE1CUzk3WnFOQnFiQ2ZrY0w0b3V2eWlJSVhZVnR5dDVHek9KV3JFbEpNOVEzZi9rMGFSTjFFZTlMempuM252dVIrWFIxZ1ZjWUFBYVF4QkVNa0lHQTdwYzMyU1VZeFpBSUVranQrMmFLSmdaWThjeFd1VVJ5dmI2ZGVyejR3Y1BGdXJ5YUVjZFFRUjVJNFFnbTVmeXVLR2FrWEFiTlVyYWppakxObFJOR2xkQjgrMDMvNVA4M0hLK1BCSDNoclpzVyszV3Q2TEYrYjNoZ1NwVjh6YjF4YkkwZjBBVUt1N09hdHI2N0YvR0dhcG8vS1RzRDRCQllSckxSbFJUR0ZFLzZqa2ZtU0FYQzZWN1lUVFlaMiszRmMzWnVCM1RwUHNZT28xODQ3a2ZHbjhFbkQ3bllWc0lmam1yNnlHdEhUc3pGM2NGNW84eEgra3VNMnVaYWF1cnJNSk8xVjdyYjRQQUZpUEd2eUV3Q0FBQT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"B_ID","2":"character"},{"1":"S_ID","2":"integer"},{"1":"S_NAME","2":"character"},{"1":"LEVEL","2":"character"},{"1":"ENROLLMENT","2":"integer"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJHZXRRdWVyeShjb25uLCAnU0VMRUNUICogRlJPTSBCT0FSRCBsaW1pdCA1JylcbmBgYCJ9 -->
+<pre class="r"><code>dbGetQuery(conn, &#39;SELECT * FROM BOARD limit 5&#39;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogQ2xvc2luZyBvcGVuIHJlc3VsdCBzZXQsIHBlbmRpbmcgcm93c1xuIn0= -->
+<pre><code>Warning: Closing open result set, pending rows</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NSwibmNvbCI6NCwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCcVZSVFcrQ1FCQmRGV29sc1IveDJnTi9RSUswb2IyQ1d0dEVqYkdhMkpOWkFXWGp1bXRocVQzMmw5c3VIeXZDb1pkdXNtSGVtemR2WnRocGIzR3ZMQlFBUUExSTFRcW95VHdFOG56MjNINENuT0dnQWlUUWlMOWZYTlRpZ2NUdlRhektFaGUyOGFSMzlCTXlIdzNkeUpGWnlKbTYzamxUZHN5SGtwdGk0UTNkUWJYM1ptZk1YY3lRandnUkZSSlhIY0t0Ri9vMDhOUnVycm0xUGlsUlJ4QXhIR3Z5Uk5QR2tYZUF6QXZPSGUwQUVxYStRT3lpWGF3ZjAyQk44VFoxTEcwM2lWWVlPUm02bXZMWmlOcUZ6S2M1VzlUOFhWRjByL2ZKQnFQUS94Y3N2cE5NNE00THN6NVNSa3IyOHJWMyt1L0xzVFhxaTh6c2ZTTGl5NkUxSHN5dFFiOWsyUWpvUVJPMlRYNnIzeUE1Y3JtM2cyRW9lZ3RTY1NHRDJqcmc5UndkU3lWMXVtZUlFbDVVYmFXT2hlSktVQ0t1SXhKUDRyWWRQeUxidGhFM1NOTHBhV2F4ZkJaTGFjdnFUL2xwUGJKQnhCT3pZN2p5c0hnMXZuR3lzTFlQRUdGaUU4NkdHcU1NQ3AzaVVDeVlaRGR3L0FVSWJqb2dVd01BQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["B_ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["B_NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["TYPE"],"name":[3],"type":["chr"],"align":["left"]},{"label":["LANGUAGE"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"B28010","2":"Algoma DSB","3":"Public","4":"English"},{"1":"B67202","2":"Algonquin and Lakeshore CDSB","3":"Roman Catholic","4":"English"},{"1":"B66010","2":"Avon Maitland DSB","3":"Public","4":"English"},{"1":"B66001","2":"Bluewater DSB","3":"Public","4":"English"},{"1":"B67164","2":"Brant Haldimand Norfolk CDSB","3":"Roman Catholic","4":"English"}],"options":{"columns":{"min":{},"max":[10],"total":[4]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJHZXRRdWVyeShjb25uLCBcIlNFTEVDVCAqIEZST00gU0NIT09MIGxpbWl0IDVcIilcbmBgYCJ9 -->
+<pre class="r"><code>dbGetQuery(conn, &quot;SELECT * FROM SCHOOL limit 5&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NSwibmNvbCI6NSwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCcDFTelU3Q1FCQWVTcXUyU2RYSTNmUUZhRkF1WEF2VW9DbG9LQnB1emRxdWxGaDJjZHNHdU9ramVQUXhmQWNQUG84UGdHNExpOUxFeExqSlpHZSsrZnRtZC9ydFlWMGJhZ0JRQmxrcVFWbmhLaWpYZzdOcUF6akNqUkxJb0diM25BZFZNaStYdy94ZU9YYWFwNDNhU2UzZkZvQ2VWOU5mUXREZjNnRXVQcUMwNXdFOHlJVk9SMWFFNTRnRW1Ca2RUTmpDNkxocno3RVZqZWdFR1hhUStpZ1pVMkswS0NIWXoxVlhSTzFiaENDajY3Y1lSc2FWUUNzV1M4STBMOGtyeHp4aDQxS3RHV1k0em9CdEpxcUxmVW9DeEJhL0Fab2Q0UWtteVY4UjhRb0F6L3l0bi9qOXlpWGs0aFUrUWlGb2d1TUNJYm5wbmJlRjduN3JPNjdYczdxMlNIWHNHOXZaZE8vMUx4Mm5hL2NHaFE0cW96TlRkTWxvU1krUUg2Vkl4WTlRTEtnSVVBdFFnc3c3eHZPNXRTeWs3TkpwOWlrOFNmcTVUSnN0WXdYZ0lDVVprNkRxaHltNXI5YXpCcmw3ZGZTMXJtenJXVXZwczdpb21JekdCQXZ1RWJyRmtkZ01QbkUrc0RsbFk1S0lTVGdhbXdsTmtJalRmQm9KSko4TmxsK1hGZ0RBUXdNQUFBPT0ifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["B_ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["S_ID"],"name":[2],"type":["int"],"align":["right"]},{"label":["S_NAME"],"name":[3],"type":["chr"],"align":["left"]},{"label":["LEVEL"],"name":[4],"type":["chr"],"align":["left"]},{"label":["ENROLLMENT"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"B28010","2":"891240","3":"Alexander Henry HS","4":"Secondary","5":"145"},{"1":"B28010","2":"902344","3":"Algoma Education Connection SS","4":"Secondary","5":"385"},{"1":"B28010","2":"19186","3":"Anna McCrea PS","4":"Elementary","5":"177"},{"1":"B28010","2":"67679","3":"Arthur Henderson PS","4":"Elementary","5":"104"},{"1":"B28010","2":"28932","3":"Aweres PS","4":"Elementary","5":"95"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the
@@ -1876,7 +1940,7 @@ run any R code chunks. Instead, the output of the chunk when it was last
 run in the editor is displayed.</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJfVXNpbmdfU1FMIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gDQoNClRyeSBleGVjdXRpbmcgdGhpcyBjaHVuayBieSBjbGlja2luZyB0aGUgKlJ1biogYnV0dG9uIHdpdGhpbiB0aGUgY2h1bmsgb3IgYnkgcGxhY2luZyB5b3VyIGN1cnNvciBpbnNpZGUgaXQgYW5kIHByZXNzaW5nICpDdHJsK1NoaWZ0K0VudGVyKi4gDQoNCmBgYHtyfQ0KaW5zdGFsbC5wYWNrYWdlcygiUlNRTGl0ZSIpDQpsaWJyYXJ5KCJSU1FMaXRlIikNCmBgYA0KDQpgYGB7cn0NCmNvbm4gPC0gZGJDb25uZWN0KFJTUUxpdGU6OlNRTGl0ZSgpLCJRdWVyeWluZ19EYXRhYmFzZURCLnNxbGl0ZSIpDQpgYGANCg0KYGBge3J9DQpkZjEgPC0gZGJFeGVjdXRlKGNvbm4sICJDUkVBVEUgVEFCTEUgQk9BUkQgKA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJfSUQgQ0hBUig2KSBOT1QgTlVMTCwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgQl9OQU1FIFZBUkNIQVIoNzUpIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBUWVBFIFZBUkNIQVIoNTApIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBMQU5HVUFHRSBWQVJDSEFSKDUwKSwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgUFJJTUFSWSBLRVkgKEJfSUQpKSIsIA0KICAgICAgICAgICAgICAgIGVycm9ycz1GQUxTRSkNCg0KYGBgDQoNCmBgYHtyfQ0KZGYyIDwtIGRiRXhlY3V0ZShjb25uLCAiQ1JFQVRFIFRBQkxFIFNDSE9PTCAoDQogICAgICAgICAgICAgICAgICBCX0lEIENIQVIoNikgTk9UIE5VTEwsIA0KICAgICAgICAgICAgICAgICAgU19JRCBDSEFSKDYpIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgIFNfTkFNRSBWQVJDSEFSKDEwMCksIA0KICAgICAgICAgICAgICAgICAgTEVWRUwgVkFSQ0hBUig3MCksIA0KICAgICAgICAgICAgICAgICAgRU5ST0xMTUVOVCBJTlRFR0VSIFdJVEggREVGQVVMVCAxMCwNCiAgICAgICAgICAgICAgICAgIFBSSU1BUlkgS0VZIChCX0lELCBTX0lEKSkiLCBlcnJvcnM9RkFMU0UpIA0KYGBgDQoNCmBgYHtyfQ0Kc2Nob29sZGYgPC0gcmVhZC5jc3YoJ2h0dHBzOi8vY2YtY291cnNlcy1kYXRhLnMzLnVzLmNsb3VkLW9iamVjdC1zdG9yYWdlLmFwcGRvbWFpbi5jbG91ZC9JQk1EZXZlbG9wZXJTa2lsbHNOZXR3b3JrLVJQMDEwM0VOLVNraWxsc05ldHdvcmsvZGF0YS9zY2hvb2wuY3N2JykNCmJvYXJkZGYgPC0gcmVhZC5jc3YoJ2h0dHBzOi8vY2YtY291cnNlcy1kYXRhLnMzLnVzLmNsb3VkLW9iamVjdC1zdG9yYWdlLmFwcGRvbWFpbi5jbG91ZC9JQk1EZXZlbG9wZXJTa2lsbHNOZXR3b3JrLVJQMDEwM0VOLVNraWxsc05ldHdvcmsvZGF0YS9ib2FyZC5jc3YnKQ0KDQpoZWFkKHNjaG9vbGRmKQ0KDQpgYGANCg0KYGBge3J9DQpoZWFkKGJvYXJkZGYpDQpgYGANCg0KYGBge3J9DQpkYldyaXRlVGFibGUoY29ubiwgIlNDSE9PTCIsIHNjaG9vbGRmLCBvdmVyd3JpdGU9VFJVRSwgaGVhZGVyID0gVFJVRSkNCmBgYA0KDQpgYGB7cn0NCmRiV3JpdGVUYWJsZShjb25uLCAiQk9BUkQiLCBib2FyZGRmLCBvdmVyd3JpdGU9VFJVRSwgaGVhZGVyID0gVFJVRSkNCmBgYA0KDQpgYGB7cn0NCmRiTGlzdFRhYmxlcyhjb25uKQ0KYGBgDQoNCmBgYHtyfQ0KDQpgYGANCg0KDQoNCg0KDQoNCg0KDQpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouDQoNCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ3RybCtTaGlmdCtLKiB0byBwcmV2aWV3IHRoZSBIVE1MIGZpbGUpLg0KDQpUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJfVXNpbmdfU1FMIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gDQoNClRyeSBleGVjdXRpbmcgdGhpcyBjaHVuayBieSBjbGlja2luZyB0aGUgKlJ1biogYnV0dG9uIHdpdGhpbiB0aGUgY2h1bmsgb3IgYnkgcGxhY2luZyB5b3VyIGN1cnNvciBpbnNpZGUgaXQgYW5kIHByZXNzaW5nICpDdHJsK1NoaWZ0K0VudGVyKi4gDQoNCmBgYHtyfQ0KaW5zdGFsbC5wYWNrYWdlcygiUlNRTGl0ZSIpDQpsaWJyYXJ5KCJSU1FMaXRlIikNCmBgYA0KDQpgYGB7cn0NCmNvbm4gPC0gZGJDb25uZWN0KFJTUUxpdGU6OlNRTGl0ZSgpLCJRdWVyeWluZ19EYXRhYmFzZURCLnNxbGl0ZSIpDQpgYGANCg0KYGBge3J9DQpkZjEgPC0gZGJFeGVjdXRlKGNvbm4sICJDUkVBVEUgVEFCTEUgQk9BUkQgKA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJfSUQgQ0hBUig2KSBOT1QgTlVMTCwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgQl9OQU1FIFZBUkNIQVIoNzUpIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBUWVBFIFZBUkNIQVIoNTApIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICBMQU5HVUFHRSBWQVJDSEFSKDUwKSwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgUFJJTUFSWSBLRVkgKEJfSUQpKSIsIA0KICAgICAgICAgICAgICAgIGVycm9ycz1GQUxTRSkNCg0KYGBgDQoNCmBgYHtyfQ0KZGYyIDwtIGRiRXhlY3V0ZShjb25uLCAiQ1JFQVRFIFRBQkxFIFNDSE9PTCAoDQogICAgICAgICAgICAgICAgICBCX0lEIENIQVIoNikgTk9UIE5VTEwsIA0KICAgICAgICAgICAgICAgICAgU19JRCBDSEFSKDYpIE5PVCBOVUxMLCANCiAgICAgICAgICAgICAgICAgIFNfTkFNRSBWQVJDSEFSKDEwMCksIA0KICAgICAgICAgICAgICAgICAgTEVWRUwgVkFSQ0hBUig3MCksIA0KICAgICAgICAgICAgICAgICAgRU5ST0xMTUVOVCBJTlRFR0VSIFdJVEggREVGQVVMVCAxMCwNCiAgICAgICAgICAgICAgICAgIFBSSU1BUlkgS0VZIChCX0lELCBTX0lEKSkiLCBlcnJvcnM9RkFMU0UpIA0KYGBgDQoNCmBgYHtyfQ0Kc2Nob29sZGYgPC0gcmVhZC5jc3YoJ2h0dHBzOi8vY2YtY291cnNlcy1kYXRhLnMzLnVzLmNsb3VkLW9iamVjdC1zdG9yYWdlLmFwcGRvbWFpbi5jbG91ZC9JQk1EZXZlbG9wZXJTa2lsbHNOZXR3b3JrLVJQMDEwM0VOLVNraWxsc05ldHdvcmsvZGF0YS9zY2hvb2wuY3N2JykNCmJvYXJkZGYgPC0gcmVhZC5jc3YoJ2h0dHBzOi8vY2YtY291cnNlcy1kYXRhLnMzLnVzLmNsb3VkLW9iamVjdC1zdG9yYWdlLmFwcGRvbWFpbi5jbG91ZC9JQk1EZXZlbG9wZXJTa2lsbHNOZXR3b3JrLVJQMDEwM0VOLVNraWxsc05ldHdvcmsvZGF0YS9ib2FyZC5jc3YnKQ0KDQpoZWFkKHNjaG9vbGRmKQ0KDQpgYGANCg0KYGBge3J9DQpoZWFkKGJvYXJkZGYpDQpgYGANCg0KYGBge3J9DQpkYldyaXRlVGFibGUoY29ubiwgIlNDSE9PTCIsIHNjaG9vbGRmLCBvdmVyd3JpdGU9VFJVRSwgaGVhZGVyID0gVFJVRSkNCmBgYA0KDQpgYGB7cn0NCmRiV3JpdGVUYWJsZShjb25uLCAiQk9BUkQiLCBib2FyZGRmLCBvdmVyd3JpdGU9VFJVRSwgaGVhZGVyID0gVFJVRSkNCmBgYA0KDQpgYGB7cn0NCmRiTGlzdFRhYmxlcyhjb25uKQ0KYGBgDQoNCmBgYHtyfQ0KdGFibGVzMSA9IGRiTGlzdFRhYmxlcyhjb25uKQ0KZm9yICh0YWJsZSBpbiB0YWJsZXMxKXsgIA0KICAgICAgICBjYXQgKCJcbkNvbHVtbiBpbmZvIGZvciB0YWJsZSIsIHRhYmxlLCAiOlxuIikNCiAgICAgICAgY29sLmRldGFpbCA8LSBkYkNvbHVtbkluZm8oZGJTZW5kUXVlcnkoY29ubixwYXN0ZSggInNlbGVjdCAqIGZyb20iLHRhYmxlKSkpDQogICAgICAgIHByaW50KGNvbC5kZXRhaWwpDQp9DQpgYGANCg0KYGBge3J9DQpkYkdldFF1ZXJ5KGNvbm4sICdTRUxFQ1QgKiBGUk9NIEJPQVJEIGxpbWl0IDUnKQ0KYGBgDQoNCmBgYHtyfQ0KZGJHZXRRdWVyeShjb25uLCAiU0VMRUNUICogRlJPTSBTQ0hPT0wgbGltaXQgNSIpDQpgYGANCg0KDQoNCg0KDQoNCg0KDQpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ3RybCtBbHQrSSouDQoNCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ3RybCtTaGlmdCtLKiB0byBwcmV2aWV3IHRoZSBIVE1MIGZpbGUpLg0KDQpUaGUgcHJldmlldyBzaG93cyB5b3UgYSByZW5kZXJlZCBIVE1MIGNvcHkgb2YgdGhlIGNvbnRlbnRzIG9mIHRoZSBlZGl0b3IuIENvbnNlcXVlbnRseSwgdW5saWtlICpLbml0KiwgKlByZXZpZXcqIGRvZXMgbm90IHJ1biBhbnkgUiBjb2RlIGNodW5rcy4gSW5zdGVhZCwgdGhlIG91dHB1dCBvZiB0aGUgY2h1bmsgd2hlbiBpdCB3YXMgbGFzdCBydW4gaW4gdGhlIGVkaXRvciBpcyBkaXNwbGF5ZWQuDQo=</div>
 
 
 
