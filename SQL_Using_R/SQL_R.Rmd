@@ -110,7 +110,20 @@ qplot(ENROLLMENT, data=elementarydf, geom="density",  main="TDSB School Size - E
 ```
 
 ```{r}
+secquery <- paste("select s.ENROLLMENT 
+from SCHOOL s, BOARD b 
+where b.B_NAME = 'Toronto DSB' and b.B_ID=s.B_ID
+and s.LEVEL = 'Secondary' 
+order by ENROLLMENT desc")
+```
 
+```{r}
+secondarydf <- dbGetQuery(conn, secquery)
+dim(secondarydf)
+```
+
+```{r}
+qplot(ENROLLMENT, data=secondarydf, geom="density",  main="TDSB School Size - Secondary")
 ```
 
 ```{r}
