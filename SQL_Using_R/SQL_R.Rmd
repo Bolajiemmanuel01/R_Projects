@@ -78,6 +78,29 @@ dbGetQuery(conn, 'SELECT * FROM BOARD limit 5')
 dbGetQuery(conn, "SELECT * FROM SCHOOL limit 5")
 ```
 
+```{r}
+boarddb <- dbGetQuery(conn, 'SELECT * FROM BOARD')
+tail(boarddb)
+```
+
+```{r}
+schooldb <- dbGetQuery(conn, "SELECT * FROM SCHOOL")
+tail(schooldb)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+
 
 
 
