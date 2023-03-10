@@ -89,6 +89,27 @@ tail(schooldb)
 ```
 
 ```{r}
+library(ggplot2)
+```
+
+```{r}
+elequery <- paste("select ENROLLMENT 
+from SCHOOL s, BOARD b 
+where b.B_NAME = 'Toronto DSB' and b.B_ID=s.B_ID 
+and s.LEVEL = 'Elementary' 
+order by ENROLLMENT desc")
+```
+
+```{r}
+elementarydf <- dbGetQuery(conn, elequery)
+dim(elementarydf)
+```
+
+```{r}
+qplot(ENROLLMENT, data=elementarydf, geom="density",  main="TDSB School Size - Elementary")
+```
+
+```{r}
 
 ```
 
@@ -96,6 +117,9 @@ tail(schooldb)
 
 ```
 
+```{r}
+
+```
 
 
 
