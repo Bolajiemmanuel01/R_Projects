@@ -50,15 +50,15 @@ head(boarddf)
 ```
 
 ```{r}
-
+dbWriteTable(conn, "SCHOOL", schooldf, overwrite=TRUE, header = TRUE)
 ```
 
 ```{r}
-
+dbWriteTable(conn, "BOARD", boarddf, overwrite=TRUE, header = TRUE)
 ```
 
 ```{r}
-
+dbListTables(conn)
 ```
 
 ```{r}
