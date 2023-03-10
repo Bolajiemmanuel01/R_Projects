@@ -127,6 +127,25 @@ qplot(ENROLLMENT, data=secondarydf, geom="density",  main="TDSB School Size - Se
 ```
 
 ```{r}
+denquery <- paste("select b.B_NAME, s.S_NAME, LEVEL , ENROLLMENT 
+ from BOARD b, SCHOOL s where b.B_ID = s.B_ID and b.B_NAME = 'Toronto DSB'")
+```
+
+```{r}
+enrollmentdf <- dbGetQuery(conn, denquery)
+dim(enrollmentdf)
+```
+
+```{r}
+head(enrollmentdf)
+```
+
+```{r}
+enrollmentdf$LEVEL <- as.factor(enrollmentdf$LEVEL)
+boxplot(ENROLLMENT ~ LEVEL, enrollmentdf, names =c("Secondary", "Elementary"), main ="Toronto DSB")
+```
+
+```{r}
 
 ```
 
@@ -134,10 +153,9 @@ qplot(ENROLLMENT, data=secondarydf, geom="density",  main="TDSB School Size - Se
 
 ```
 
+```{r}
 
-
-
-
+```
 
 
 
