@@ -1,0 +1,136 @@
+```{r}
+library(RSQLite)
+```
+
+
+```{r}
+conn <- dbConnect(RSQLite::SQLite(), "FinalDB_lab4.sqlite")
+```
+
+```{r}
+# Crop Data
+df1 <- dbExecute(conn, 
+                    "CREATE TABLE CROP_DATA (
+                                      CD_ID INTEGER NOT NULL,
+                                      YEAR DATE NOT NULL,
+                                      CROP_TYPE VARCHAR(20) NOT NULL,
+                                      GEO VARCHAR(20) NOT NULL,
+                                      SEEDED_AREA INTEGER NOT NULL,
+                                      HARVESTED_AREA INTEGER NOT NULL,
+                                      PRODUCTION INTEGER NOT NULL,
+                                      AVG_YIELD INTEGER NOT NULL,
+                                      PRIMARY KEY (CD_ID)
+                                      )",
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+
+```
+
+```{r}
+df2 <- dbExecute(conn, 
+                    "CREATE TABLE DAILY_FX (
+                              DFX_ID INTEGER NOT NULL,
+                              DATE DATE NOT NULL,
+                              FXUSDCAD FLOAT(6),
+                              PRIMARY KEY (DFX_ID)
+                              )", 
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+```
+
+```{r}
+crop_df <- read.csv('Annual_Crop_Data.csv', colClasses = c(YEAR="character"))
+daily_df <- read.csv('Daily_FX.csv', colClasses = c(DATE="character"))
+
+head(crop_df)
+head(daily_df)
+```
+
+```{r}
+dbWriteTable(conn, "CROP_DATA", crop_df, overwrite=TRUE, header=TRUE)
+dbWriteTable(conn, "DAILY_FX", daily_df, overwrite=TRUE, header=TRUE)
+```
+
+```{r}
+dbListTables(conn)
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT COUNT(CD_ID) FROM CROP_DATA')
+```
+
+```{r}
+dbGetQuery(conn, "SELECT COUNT(DFX_ID) FROM DAILY_FX")
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT * FROM CROP_DATA LIMIT 6')
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT distinct(CROP_TYPE) FROM CROP_DATA')
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT * FROM CROP_DATA WHERE CROP_TYPE = "Rye" LIMIT 6')
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT DISTINCT(CROP_TYPE) FROM CROP_DATA WHERE AVG_YIELD > 3000')
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT min(YEAR) FIRST_DATE, max(YEAR) LAST_DATE FROM CROP_DATA')
+```
+
+```{r}
+dbGetQuery(conn, 'SELECT min(DATE) FIRST_DATE, max(DATE) LAST_DATE FROM DAILY_FX')
+```
+
+```{r}
+dbGetQuery(conn, "SELECT strftime('%Y', YEAR) AS TOP_10_YRS, GEO, HARVESTED_AREA
+           FROM CROP_DATA
+           WHERE CROP_TYPE='Wheat' AND GEO='Saskatchewan'
+           ORDER BY HARVESTED_AREA DESC
+           LIMIT 10
+           ")
+```
+
+```{r}
+dbGetQuery(conn, "SELECT COUNT(DISTINCT(YEAR)) AS BLY_YRS_ABOVE_2MTPH
+    FROM CROP_DATA 
+    WHERE AVG_YIELD > 2000 AND 
+          CROP_TYPE='Barley' AND 
+          GEO='Canada' ")
+```
+
+```{r}
+dbGetQuery(conn, "SELECT strftime('%Y', YEAR) AS YEAR, GEO, CROP_TYPE, SEEDED_AREA, HARVESTED_AREA, 100*(SEEDED_AREA - HARVESTED_AREA)/SEEDED_AREA AS PCT_UNHARVESTED_AREA FROM CROP_DATA WHERE YEAR >= 2000 AND GEO = 'Alberta' AND CROP_TYPE = 'Barley'")
+```
+
+```{r}
+dbGetQuery(conn, "SELECT MIN(DATE) AS AS_OF_DATE, 
+            AVG(FXUSDCAD) AS FX_DAILY_AVG_CAD 
+    FROM  DAILY_FX
+    WHERE DATE >= (SELECT MAX(DATE) - 3 YEARS FROM DAILY_FX)")
+```
+
+```{r}
+dbGetQuery(conn, "SELECT CD_ID,YEAR ,CROP_TYPE, GEO, SEEDED_AREA, HARVESTED_AREA, PRODUCTION, AVG_YIELD, FXUSDCAD  
+    FROM CROP_DATA, DAILY_FX 
+    WHERE strftime('%Y',CROP_DATA.YEAR) = strftime('%Y',DAILY_FX.DATE) and strftime('%m', CROP_DATA.YEAR) = strftime('%m', DAILY_FX.DATE) LIMIT 5")
+```

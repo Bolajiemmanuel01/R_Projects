@@ -1,0 +1,213 @@
+```{r}
+library("RSQLite")
+```
+
+```{r}
+# Establish connection
+conn <- dbConnect(RSQLite::SQLite(), "FinalDB.sqlite")
+```
+
+```{r}
+# CROP_DATA Table
+df1 <- dbExecute(conn, 
+                    "CREATE TABLE CROP_DATA (
+                                      CD_ID INTEGER NOT NULL,
+                                      YEAR DATE NOT NULL,
+                                      CROP_TYPE VARCHAR(20) NOT NULL,
+                                      GEO VARCHAR(20) NOT NULL,
+                                      SEEDED_AREA INTEGER NOT NULL,
+                                      HARVESTED_AREA INTEGER NOT NULL,
+                                      PRODUCTION INTEGER NOT NULL,
+                                      AVG_YIELD INTEGER NOT NULL,
+                                      PRIMARY KEY (CD_ID)
+                                      )",
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+
+```
+
+```{r}
+# FARM_PRICES
+df2 <- dbExecute(conn, 
+                    "CREATE TABLE FARM_PRICES (
+                                      CD_ID INTEGER NOT NULL,
+                                      DATE DATE NOT NULL,
+                                      CROP_TYPE VARCHAR(20) NOT NULL,
+                                      GEO VARCHAR(20) NOT NULL,
+                                      PRICE_PRERMT FLOAT(7) NOT NULL,
+                                      FOREIGN KEY (CD_ID) REFERENCES CROP_DATA(CD_ID)
+                                      )",
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+
+```
+
+```{r}
+# DAILY_FX
+df3 <- dbExecute(conn, 
+                    "CREATE TABLE DAILY_FX (
+                              DFX_ID INTEGER NOT NULL,
+                              DATE DATE NOT NULL,
+                              FXUSDCAD FLOAT(6),
+                              PRIMARY KEY (DFX_ID)
+                              )", 
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+```
+
+```{r}
+# Monthly_FX
+
+df3 <- dbExecute(conn, 
+                    "CREATE TABLE MONTHLY_FX (
+                              DFX_ID INTEGER NOT NULL,
+                              DATE DATE NOT NULL,
+                              FXUSDCAD FLOAT(6),
+                              FOREIGN KEY (DFX_ID) REFERENCES DAILY_FX(DFX_ID)
+                              )", 
+                    errors=FALSE
+                    )
+  if (df1 == -1){
+      cat ("An error has occurred.\n")
+      msg <- obdcGetErrMsg(conn)
+      print(msg)
+  } else {
+      cat("Table was created successfully.\n")
+  }
+```
+
+```{r}
+#check list of tables in the present db.
+dbListTables(conn)
+```
+
+```{r}
+# Load data from the URLs 
+crop_data <- read.csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-RP0203EN-SkillsNetwork/labs/Final%20Project/Annual_Crop_Data.csv")
+farm_product_prices <- read.csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-RP0203EN-SkillsNetwork/labs/Final%20Project/Monthly_Farm_Prices.csv")
+daily_fx_data <- read.csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-RP0203EN-SkillsNetwork/labs/Final%20Project/Daily_FX.csv")
+monthly_fx_data <- read.csv("https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-RP0203EN-SkillsNetwork/labs/Final%20Project/Monthly_FX.csv")
+
+head(crop_data)
+head(farm_product_prices)
+head(daily_fx_data)
+head(monthly_fx_data)
+```
+
+```{r}
+# Load into the database
+dbWriteTable(conn, "CROP_DATA", crop_data, overwrite=TRUE, header=TRUE)
+dbWriteTable(conn, "FARM_PRICES", farm_product_prices, overwrite=TRUE, header=TRUE)
+dbWriteTable(conn, "DAILY_FX", daily_fx_data, overwrite=TRUE, header=TRUE)
+dbWriteTable(conn, "MONTHLY_FX", monthly_fx_data, overwrite=TRUE, header=TRUE)
+
+```
+
+```{r}
+# How many records are in the farm prices dataset?
+dbGetQuery(conn, 'SELECT COUNT(CD_ID) as Number_of_records FROM FARM_PRICES')
+# 2678
+```
+
+```{r}
+# Which geographies are included in the farm prices dataset?
+dbGetQuery(conn, 'SELECT distinct(GEO) AS number_of_geographies FROM FARM_PRICES')
+# Alberta	AND Saskatchewan
+```
+```{r}
+# How many hectares of Rye were harvested in Canada in 1968?
+dbGetQuery(conn, "SELECT strftime('%Y', YEAR) AS YEAR, GEO, sum(HARVESTED_AREA) AS Hectares FROM CROP_DATA WHERE YEAR > 1968 AND YEAR < 1969 AND GEO = 'Canada' AND CROP_TYPE = 'Rye'")
+# 27 hectares
+```
+
+```{r}
+# Query and display the first 6 rows of the farm prices table for Rye.
+dbGetQuery(conn, "SELECT * FROM FARM_PRICES WHERE CROP_TYPE = 'Rye' LIMIT 6")
+```
+
+```{r}
+# Which provinces grew Barley?
+dbGetQuery(conn, "SELECT distinct(GEO) FROM FARM_PRICES WHERE CROP_TYPE = 'Barley'")
+# Alberta, Canada, and Saskatchewan
+```
+
+```{r}
+# Find the first and last dates for the farm prices data.
+dbGetQuery(conn, 'SELECT min(DATE) FIRST_DATE, max(DATE) LAST_DATE FROM FARM_PRICES')
+```
+
+```{r}
+# Which crops have ever reached a farm price greater than or equal to $350 per metric tonne?
+dbGetQuery(conn, "SELECT distinct(CROP_TYPE) AS Farm_crop_greater_than_$350 FROM FARM_PRICES WHERE PRICE_PRERMT >= 350")
+# Only Canola
+```
+
+```{r}
+# Rank the crop types harvested in Saskatchewan in the year 2000 by their average yield. Which crop performed best?
+dbGetQuery(conn, "SELECT strftime('%Y', YEAR) AS YEAR, GEO, CROP_TYPE, sum(AVG_YIELD) FROM CROP_DATA 
+                  WHERE YEAR > 2000 AND YEAR < 2001 AND GEO = 'Saskatchewan' 
+                  GROUP BY CROP_TYPE
+                  ORDER BY AVG_YIELD DESC")
+# 1. Barley
+# 2. Wheat
+# 3. Rye
+# 4. Canola
+
+# The best performer was Barley, which had an average yield of 2800
+```
+
+```{r}
+# Rank the crops and geographies by their average yield (KG per hectare) since the year 2000. Which crop and province had the highest average yield since the year 2000?
+dbGetQuery(conn, "SELECT CROP_TYPE, strftime('%Y', YEAR) AS YEAR, GEO, AVG(AVG_YIELD) AS TOTAL_YIELD FROM CROP_DATA
+                  WHERE YEAR >= 2000
+                  GROUP BY CROP_TYPE, GEO
+                  ORDER BY TOTAL_YIELD DESC")
+# Alberta has the highest yield on Barley.
+```
+```{r}
+# Use a subquery to determine how much wheat was harvested in Canada in the most recent year of the data.
+dbGetQuery(conn, "SELECT strftime('%Y', YEAR) AS YEAR, GEO, CROP_TYPE, sum(HARVESTED_AREA) 
+                  FROM CROP_DATA
+                  WHERE GEO = 'Canada'
+                  AND CROP_TYPE = 'Wheat'
+                  AND YEAR >= (SELECT MAX(strftime('%Y', YEAR)) FROM CROP_DATA)")
+# 10,017,800
+```
+
+```{r}
+# Use an implicit inner join to calculate the monthly price per metric tonne of Canola grown in Saskatchewan in both Canadian and US dollars. Display the most recent 6 months of the data.
+dbGetQuery(conn, "SELECT fp.DATE AS MONTH, fp.GEO AS PROVINCE, fp.CROP_TYPE AS CROP_TYPE, fp.PRICE_PRERMT AS CANADIAN_PRICE, fp.PRICE_PRERMT / mfx.FXUSDCAD                    AS US_PRICE
+                  FROM FARM_PRICES fp
+                  INNER JOIN MONTHLY_FX mfx
+                  ON fp.DATE = mfx.DATE
+                  WHERE CROP_TYPE = 'Canola'
+                  AND PROVINCE = 'Saskatchewan'
+                  ORDER BY MONTH DESC
+                  LIMIT 6
+                  ")
+```
+
+
+
+
